@@ -4,18 +4,29 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 const root = path.resolve(__dirname, '..');
 
-const from = path.join(root, 'packages/assets/fonts/pretendard');
-const toFrontend = path.join(root, 'apps/frontend/public/fonts/pretendard');
-const toCMS = path.join(root, 'apps/cms/public/fonts/pretendard');
+// 공통 원본 경로
+const FONT_NAME = 'pretendard';
+const fromFontDir = path.join(root, `packages/assets/fonts/${FONT_NAME}`);
+const fromCssFile = path.join(root, `packages/assets/fonts/${FONT_NAME}.css`);
 
-fs.copySync(from, toFrontend);
-fs.copySync(from, toCMS);
-console.log('✅ Copied Pretendard font files to frontend & CMS');
+// 앱별 경로설정
+const appsConfig = ['frontend', 'cms'].map((app) => ({
+  fontWoffOutputDir: path.join(root, `apps/${app}/public/fonts/${FONT_NAME}`),
+  styleOutputDir: path.join(root, `apps/${app}/src/styles`),
+  fontCssOutputPath: path.join(root, `apps/${app}/src/styles/${FONT_NAME}.css`),
+}));
 
-const cssFile = path.join(root, 'packages/assets/fonts/pretendard.css');
-fs.copySync(cssFile, path.join(toFrontend, '../pretendard.css'));
-fs.copySync(cssFile, path.join(toCMS, '../pretendard.css'));
-console.log('✅ Copied Pretendard CSS file to frontend & CMS');
+// woff 파일 복사
+appsConfig.forEach(({ fontWoffOutputDir }) => {
+  fs.copySync(fromFontDir, fontWoffOutputDir);
+});
+console.log('✅ Copied Pretendard .woff2 files to public directories');
+
+// styles 디렉토리 생성 및 css 복사
+appsConfig.forEach(({ styleOutputDir, fontCssOutputPath }) => {
+  fs.ensureDirSync(styleOutputDir);
+  fs.copyFileSync(fromCssFile, fontCssOutputPath);
+});
+console.log('✅ Copied Pretendard CSS file to src/styles directories');

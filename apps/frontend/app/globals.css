@@ -1,3 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('/fonts/pretendard/pretendard.css');
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

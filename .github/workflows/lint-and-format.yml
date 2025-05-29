@@ -1,0 +1,40 @@
+name: 🔍 Lint & Format Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📦 Load Node.js version from .nvmrc
+        id: load-node-version
+        run: echo "version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ steps.load-node-version.outputs.version }}
+          check-latest: true
+
+      - name: 🧩 Install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@8.15.4 --activate
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🧹 Lint
+        run: pnpm turbo run lint
+
+      - name: 🧼 Format Check
+        run: pnpm turbo run format:check

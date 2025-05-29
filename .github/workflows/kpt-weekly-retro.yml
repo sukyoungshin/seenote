@@ -34,15 +34,32 @@ jobs:
           const title = `[KPT] Week ${diffInWeeks} - ${format(startDate)} ~ ${format(endDate)}`;
           const body = `## 📅 Week ${diffInWeeks} - ${format(startDate)} ~ ${format(endDate)}\n\n### ✅ Keep\n- \n\n### 🤔 Problem\n- \n\n### 🚀 Try\n- `;
 
-          console.log(`::set-output name=title::${title}`);
-          console.log(`::set-output name=body::${body}`);
+          const fs = require('fs');
+          fs.writeFileSync('./discussion-payload.json', JSON.stringify({ title, body }));
           EOF
 
-      - name: Discussions 글 자동 생성
+      - name: Discussions 글 자동 생성 (GraphQL + jq 안전 처리)
         env:
           GH_TOKEN: ${{ secrets.GH_DISCUSSION_TOKEN }}
         run: |
-          curl -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: application/json" \
-          -d '{
-            "query": "mutation CreateDiscussion { createDiscussion(input: {repositoryId: \"R_kgDOOwv0aA\", categoryId: \"DIC_kwDOOwv0aM4Cqto8\", title: \"${{ steps.date.outputs.title }}\", body: \"${{ steps.date.outputs.body }}\"}) { discussion { id } } }"
-          }' https://api.github.com/graphql
+          TITLE=$(jq -r .title discussion-payload.json)
+          BODY=$(jq -r .body discussion-payload.json)
+
+          echo "📌 생성될 제목: $TITLE"
+          echo "📌 생성될 본문:"
+          echo "$BODY"
+
+          jq -n \
+            --arg query 'mutation CreateDiscussion($title: String!, $body: String!) { createDiscussion(input: {repositoryId: "R_kgDOOwv0aA", categoryId: "DIC_kwDOOwv0aM4Cqto8", title: $title, body: $body}) { discussion { id } } }' \
+            --arg title "$TITLE" \
+            --arg body "$BODY" \
+            '{ query: $query, variables: { title: $title, body: $body } }' > mutation.json
+
+          cat mutation.json
+
+          curl -s -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: application/json" \
+            --data @mutation.json \
+            https://api.github.com/graphql | tee graphql-response.json
+
+          echo "✅ GraphQL 응답 결과:"
+          cat graphql-response.json

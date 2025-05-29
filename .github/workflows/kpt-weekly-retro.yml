@@ -1,0 +1,48 @@
+name: 🔄 Weekly KPT Discussion Creator
+description: '매주 자동으로 Discussions에 회고 템플릿 생성'
+
+on:
+  schedule:
+    - cron: '0 12 * * 0' # 매주 일요일 오후 9시 (KST 기준)
+  workflow_dispatch:
+
+jobs:
+  create-kpt-discussion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 이번 주 정보 계산
+        id: date
+        run: |
+          node <<'EOF'
+          const BASE_DATE = new Date('2025-06-02');
+          const now = new Date();
+
+          // 주차 계산: 기준일로부터 몇 주가 지났는지 계산 (1부터 시작)
+          const msPerWeek = 7 * 24 * 60 * 60 * 1000;
+          const diffInWeeks = Math.floor((now - BASE_DATE) / msPerWeek) + 1;
+
+          // 이번 주 월~일 계산
+          const startDate = new Date(now);
+          startDate.setDate(now.getDate() - now.getDay() + 1); // 월요일
+          const endDate = new Date(startDate);
+          endDate.setDate(startDate.getDate() + 6); // 일요일
+
+          function format(d) {
+            return d.toISOString().split('T')[0];
+          }
+
+          const title = `[KPT] Week ${diffInWeeks} - ${format(startDate)} ~ ${format(endDate)}`;
+          const body = `## 📅 Week ${diffInWeeks} - ${format(startDate)} ~ ${format(endDate)}\n\n### ✅ Keep\n- \n\n### 🤔 Problem\n- \n\n### 🚀 Try\n- `;
+
+          console.log(`::set-output name=title::${title}`);
+          console.log(`::set-output name=body::${body}`);
+          EOF
+
+      - name: Discussions 글 자동 생성
+        env:
+          GH_TOKEN: ${{ secrets.GH_DISCUSSION_TOKEN }}
+        run: |
+          curl -X POST -H "Authorization: Bearer $GH_TOKEN" -H "Content-Type: application/json" \
+          -d '{
+            "query": "mutation CreateDiscussion { createDiscussion(input: {repositoryId: \"R_kgDOOwv0aA\", categoryId: \"DIC_kwDOOwv0aM4Cqto8\", title: \"${{ steps.date.outputs.title }}\", body: \"${{ steps.date.outputs.body }}\"}) { discussion { id } } }"
+          }' https://api.github.com/graphql

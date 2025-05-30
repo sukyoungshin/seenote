@@ -1,14 +1,11 @@
-/** @type {import('tailwindcss').Config} */
-const config = {
-  content: ['../../apps/**/app/**/*.{js,ts,jsx,tsx}', '../../packages/ui/**/*.{js,ts,jsx,tsx}'],
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Pretendard', 'sans-serif'],
-      },
-    },
-  },
-  plugins: [],
-};
+import baseConfig from '@repo/tailwind-config';
 
-export default config;
+/** @type {import('tailwindcss').Config} */
+export default {
+  presets: [baseConfig],
+  content: [
+    './app/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,ts,jsx,tsx}',
+    '../../packages/ui/**/*.{js,ts,jsx,tsx}',
+  ],
+};

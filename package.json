@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "pnpm copy-fonts && pnpm copy-tailwind && turbo run dev",
+    "dev": "pnpm copy-fonts && turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "format:check": "prettier --check .",
@@ -20,7 +20,7 @@
     "fs-extra": "^11.3.0",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
-    "tailwindcss": "^4.1.7",
+    "tailwindcss": "^3.4.17",
     "tsx": "^4.19.4",
     "turbo": "^2.5.3",
     "typescript": "5.8.2",
@@ -30,5 +30,9 @@
   "engines": {
     "node": ">=18"
   },
-  "type": "module"
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }

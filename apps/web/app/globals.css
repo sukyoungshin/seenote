@@ -1,4 +1,4 @@
-@import '../../frontend/src/styles/pretendard.css';
+@import '../../web/src/styles/pretendard.css';
 
 @tailwind base;
 @tailwind components;

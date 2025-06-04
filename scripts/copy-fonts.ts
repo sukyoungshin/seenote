@@ -12,7 +12,7 @@ const fromFontDir = path.join(root, `packages/assets/fonts/${FONT_NAME}`);
 const fromCssFile = path.join(root, `packages/assets/fonts/${FONT_NAME}.css`);
 
 // 앱별 경로설정
-const appsConfig = ['frontend', 'cms'].map((app) => ({
+const appsConfig = ['web', 'cms'].map((app) => ({
   fontWoffOutputDir: path.join(root, `apps/${app}/public/fonts/${FONT_NAME}`),
   styleOutputDir: path.join(root, `apps/${app}/src/styles`),
   fontCssOutputPath: path.join(root, `apps/${app}/src/styles/${FONT_NAME}.css`),

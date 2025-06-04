@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ContentType {
+  WEBTOON
+  MOVIE
+  BOOK
+  WEBNOVEL // 웹소설
+  PLAY // 연극
+  COMICS
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model Content {
+  id            Int         @id @default(autoincrement())
+  title         String
+  contentType   ContentType
+  thumbnailPath String?
+  isShow        Boolean     @default(true)
+  isDelete      Boolean     @default(false)
+
+  createdBy   User @relation("ContentCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  createdById Int
+
+  updatedBy   User @relation("ContentUpdatedBy", fields: [updatedById], references: [id], onDelete: Cascade)
+  updatedById Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  reviews Review[]
+}
+
+model Review {
+  id        Int     @id @default(autoincrement())
+  emojiType String
+  message   String?
+  isShow    Boolean @default(true)
+  isDelete  Boolean @default(false)
+
+  createdBy   User @relation("ReviewCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  createdById Int
+
+  updatedBy   User @relation("ReviewUpdatedBy", fields: [updatedById], references: [id], onDelete: Cascade)
+  updatedById Int
+
+  content   Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  contentId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String
+  nickName String
+  email    String
+  role     Role
+  isBlock  Boolean @default(false)
+  isDelete Boolean @default(false)
+
+  createdBy   User @relation("UserCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  createdById Int
+
+  updatedBy   User @relation("UserUpdatedBy", fields: [updatedById], references: [id], onDelete: Cascade)
+  updatedById Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  contentsCreated Content[] @relation("ContentCreatedBy")
+  contentsUpdated Content[] @relation("ContentUpdatedBy")
+  reviewsCreated  Review[]  @relation("ReviewCreatedBy")
+  reviewsUpdated  Review[]  @relation("ReviewUpdatedBy")
+  usersCreated    User[]    @relation("UserCreatedBy")
+  usersUpdated    User[]    @relation("UserUpdatedBy")
+}

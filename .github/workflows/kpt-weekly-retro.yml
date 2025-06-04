@@ -31,8 +31,8 @@ jobs:
             return d.toISOString().split('T')[0];
           }
 
-          const title = `[KPT] Week ${diffInWeeks} - ${format(startDate)} ~ ${format(endDate)}`;
-          const body = `## 📅 Week ${diffInWeeks} - ${format(startDate)} ~ ${format(endDate)}\n\n### ✅ Keep\n- \n\n### 🤔 Problem\n- \n\n### 🚀 Try\n- `;
+          const title = `[KPT] [Week ${diffInWeeks}] ${format(startDate)} ~ ${format(endDate)}`;
+          const body = `### 🟢 Keep\n- \n\n### 🔴 Problem\n- \n\n### 🟡 Try\n- `;
 
           const fs = require('fs');
           fs.writeFileSync('./discussion-payload.json', JSON.stringify({ title, body }));

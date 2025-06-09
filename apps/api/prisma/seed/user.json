@@ -2,7 +2,8 @@
   {
     "id": 1,
     "name": "신수경",
-    "nickName": "상추맘",
+    "nickname": "상추맘",
+    "password": "1234567@",
     "email": "sukyoung.dev@gmail.com",
     "role": "ADMIN",
     "createdById": 1,
@@ -11,7 +12,8 @@
   {
     "id": 2,
     "name": "김별님",
-    "nickName": "배추맘",
+    "nickname": "배추맘",
+    "password": "1234567@",
     "email": "sukyoung@gmail.com",
     "role": "USER",
     "createdById": 1,

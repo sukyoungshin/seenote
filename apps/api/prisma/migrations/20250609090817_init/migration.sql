@@ -40,9 +40,10 @@ CREATE TABLE "Review" (
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "nickName" TEXT NOT NULL,
+    "nickname" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "role" "Role" NOT NULL,
+    "password" TEXT NOT NULL,
+    "role" "Role" NOT NULL DEFAULT 'USER',
     "isBlock" BOOLEAN NOT NULL DEFAULT false,
     "isDelete" BOOLEAN NOT NULL DEFAULT false,
     "createdById" INTEGER NOT NULL,

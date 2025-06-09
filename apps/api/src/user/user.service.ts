@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Role } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -14,6 +15,8 @@ export class UserService {
   }
 
   async create(data: CreateUserDto) {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
     const [user] = await this.prisma.$transaction(async (tx) => {
       // 1. 임시 시스템 유저(id: 1)로 createdBy/updatedBy 설정 후 생성
       const user = await tx.user.create({
@@ -21,7 +24,7 @@ export class UserService {
           email: data.email,
           name: data.name,
           nickname: data.nickname,
-          password: data.password,
+          password: hashedPassword,
           role: data.role as Role,
           createdBy: {
             connect: { id: 1 },

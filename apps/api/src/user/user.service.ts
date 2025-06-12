@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Role } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -58,5 +59,23 @@ export class UserService {
     });
 
     return user;
+  }
+
+  async update(id: number, data: UpdateUserDto) {
+    const updateData = { ...data };
+
+    // role enum 변환
+    if (data.role) {
+      updateData.role = data.role as Role;
+    }
+    // 비밀번호 변경 요청이 있다면 bcrypt 처리
+    if (data.password) {
+      updateData.password = await bcrypt.hash(data.password, 10);
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data: updateData as Prisma.UserUpdateInput,
+    });
   }
 }

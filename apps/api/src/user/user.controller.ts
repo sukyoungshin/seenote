@@ -12,8 +12,8 @@ export class UserController {
     return this.userService.findAll();
   }
   @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.userService.findById(Number(id));
+  findById(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.findById(id);
   }
 
   @Post()
@@ -22,8 +22,8 @@ export class UserController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(Number(id), updateUserDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(id, updateUserDto);
   }
 
   @Patch(':id/delete')

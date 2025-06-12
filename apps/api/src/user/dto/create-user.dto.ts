@@ -8,31 +8,37 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { Trim } from 'src/common/decorators/trim.decorator';
 
 export class CreateUserDto {
+  @Trim()
   @IsEmail()
   @IsNotEmpty()
   @MinLength(2)
   @MaxLength(20)
   email: string;
 
+  @Trim()
   @IsString()
   @IsNotEmpty()
   @MinLength(2)
   @MaxLength(20)
   name: string;
 
+  @Trim()
   @IsString()
   @IsNotEmpty()
   @MinLength(2)
   @MaxLength(20)
   nickname: string;
 
+  @Trim()
   @IsString()
   @IsNotEmpty()
   @IsEnum(Role)
   role: string;
 
+  @Trim()
   @IsString()
   @IsNotEmpty()
   @MinLength(6)

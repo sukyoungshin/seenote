@@ -78,4 +78,11 @@ export class UserService {
       data: updateData as Prisma.UserUpdateInput,
     });
   }
+
+  async deleteById(id: number) {
+    return this.prisma.user.update({
+      where: { id },
+      data: { isDelete: true },
+    });
+  }
 }

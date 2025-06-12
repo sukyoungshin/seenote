@@ -14,6 +14,12 @@ export class UserService {
     });
   }
 
+  findById(id: number) {
+    return this.prisma.user.findUnique({
+      where: { id },
+    });
+  }
+
   async create(data: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
 

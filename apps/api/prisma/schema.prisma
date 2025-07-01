@@ -70,9 +70,10 @@ model Review {
 model User {
   id       Int     @id @default(autoincrement())
   name     String
-  nickName String
+  nickname String
   email    String
-  role     Role
+  password String
+  role     Role    @default(USER)
   isBlock  Boolean @default(false)
   isDelete Boolean @default(false)
 

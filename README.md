@@ -1,84 +1,88 @@
-# Turborepo starter
+# 📚 Seenote – 감정을 기록하는 감성 개인서재
 
-This Turborepo starter is maintained by the Turborepo core team.
+> 실제 서비스 아키텍처에 가까운 구조를 직접 설계하고 구현하며, 풀스택 개발 역량을 확장하고자 진행 중인 개인 프로젝트입니다.<br/>
+> Turborepo 기반 Monorepo 구성, Nest.js API 서버 개발, JWT 인증, 프론트 상태 관리 설계 등을 단계적으로 구현하고 있습니다.
 
-## Using this example
+## 🧭 프로젝트 개요
 
-Run the following command:
+Seenote는 전자책, 웹툰, OTT 등의 콘텐츠 감상을 감정 중심으로 기록하는 개인 서재형 웹앱입니다. <br/>
+이 프로젝트를 통해 다음과 같은 기술적 시도를 했습니다:
 
-```sh
-npx create-turbo@latest
-```
+- **Turborepo 기반의 Monorepo 구조 구성 및 공통 패키지 구성**
+- **Nest.js + Prisma 기반의 REST API 구축**
+- **JWT 기반 인증 및 사용자/관리자 역할 분리 처리**
+- _(진행 예정)_ 프론트 UI 기획 및 상태 관리 구조 설계
 
-## What's inside?
+## 🗂️ 프로젝트 관리 방식
 
-This Turborepo includes the following packages/apps:
+- GitHub Issues와 Milestone으로 기능 단위 계획 및 우선순위 관리
+- 커밋 컨벤션: `feat`, `fix`, `refactor`, `docs`, `chore` 등으로 관리
+- PR 라벨링, 이슈 템플릿 작성 등 협업 관점의 워크플로우 실험
 
-### Apps and Packages
+## 🛠️ 기술 스택
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+| 영역     | 기술                                                                                                                                                                                                                                                                                                                               |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Frontend | [Next.js](https://nextjs.org/)(App Router), [TypeScript](https://www.typescriptlang.org/), [TailwindCSS](https://tailwindcss.com/)                                                                                                                                                                                                 |
+| Backend  | [Nest.js](https://nestjs.com/), [Prisma](https://www.prisma.io/?via=start&gad_source=1&gad_campaignid=21223529504&gbraid=0AAAAA9nNp_fuSOZXaRYEu-WCZw3Qd4OLU&gclid=Cj0KCQjw64jDBhDXARIsABkk8J4smZgzzQ43ENMf7b4FWLCVdK4U0tm4sTywV-gNgaDdw-RkH_JvNQUaAuEMEALw_wcB), [PostgreSQL](https://www.postgresql.org/), [JWT](https://jwt.io/) |
+| Infra    | [Turborepo](https://turborepo.com/), GitHub Actions (예정), [Vercel](https://vercel.com/), Railway(예정)                                                                                                                                                                                                                           |
+| Tooling  | [ESLint](https://eslint.org/), [Prettier](https://prettier.io), [pnpm](https://pnpm.io/ko/), [Figma](https://www.figma.com/), [diagrams.net](https://www.drawio.com/)                                                                                                                                                              |
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
+## 🗂️ 폴더 구조
 
 ```
-cd my-turborepo
-pnpm build
+/apps
+  ├─ web        # 사용자 화면 (Next.js)
+  ├─ cms        # 관리자 화면 (Next.js)
+  └─ api        # API 서버 (Nest.js)
+
+/packages
+  └─ eslint-config  # 공통 ESLint 설정
+
+/.github           # CI 설정
+/docs              # 프로젝트 문서 및 아키텍처 정의
 ```
 
-### Develop
+## 🚧 주요 구현 내역
 
-To develop all apps and packages, run the following command:
+- [x] Turborepo 기반 프로젝트 구조 구성 및 패키지 통합 관리
+- [x] PostgreSQL 기반 관계형 모델링 및 Prisma 스키마 설계
+- [ ] Nest.js + Prisma 기반 관리자용 콘텐츠 CRUD API 구현 _(진행 중)_
+- [ ] 사용자 감상 기록 UI 기획 및 Notion 스타일 인터페이스 설계
+- [ ] 감정 기반 메모 기록 / 검색 기능 프론트 개발 예정
 
-```
-cd my-turborepo
-pnpm dev
-```
+## ⚙️ 실행 방법
 
-### Remote Caching
+```bash
+# 레포 클론 및 패키지 설치
+git clone https://github.com/sukyoungshin/seenote.git
+cd seenote
+pnpm install
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+# 데이터베이스 마이그레이션
+pnpm prisma migrate dev --filter=api
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
+# 개발 서버 실행
+pnpm dev # 모든 앱 동시 실행 (Turborepo 기반)
 ```
 
-## Useful Links
+### 환경 변수 설정 (`apps/api/.env`)
 
-Learn more about the power of Turborepo:
+아래는 로컬 개발 시 사용되는 `.env` 파일 예시입니다:
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+```env
+DATABASE_URL=postgresql://<USERNAME>:<PASSWORD>@localhost:5432/<DB_NAME>
+JWT_SECRET=<YOUR_JWT_SECRET>
+```
+
+## 참고 자료
+
+- [ERD 설계도](https://app.diagrams.net/#G1kbiKRBm3EKLRzDi8cevRwkcAcdCKE5n4#%7B%22pageId%22%3A%224fE63W0RabtmQJJCjAPa%22%7D)
+- [API 명세](https://docs.google.com/spreadsheets/d/1PIgEtqSUhj3hIzWzcacfBX-NITza7JUjETMliwTUarE/edit?gid=0#gid=0)
+
+## 👩🏻‍💻 개발자
+
+**신수경 (SuKyoung Shin)**
+
+- GitHub: [@sukyoungshin](https://github.com/sukyoungshin)
+- Email: [sukyoung.dev@gmail.com](mailto:sukyoung.dev@gmail.com)
